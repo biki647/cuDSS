@@ -46,9 +46,6 @@ int main(){
         // 右辺ベクトルbの初期化（例として1+0iのベクトルを使用）
         std::vector<cuDoubleComplex> b_values(n, cuDoubleComplex{1.0, 0.0});
 	std::vector<cuDoubleComplex> x_values(n);
-	//  for(auto&& e: b_values){
-	//      std::cout << e.x << ", " << e.y << std::endl;
-	//  }
 
 	// device側でのcsrデータの作成
 	int *row_ptr_d = nullptr;
@@ -177,22 +174,6 @@ int main(){
 	    out << "b[" << i << "] = (" << b_confirm[i].x << ", " << b_confirm[i].y << ")" << std::endl;
 	}
 	out.close();
-        // std::vector<std::complex<double>> x(num_cols);
-        // cudaMemcpy(x.data(), d_x, num_cols * sizeof(std::complex<double>), cudaMemcpyDeviceToHost);
-
-        // // 結果の表示
-        // for (int i = 0; i < num_cols; ++i) {
-        //     std::cout << "x[" << i << "] = " << x[i] << std::endl;
-        // }
-
-        // // リソースの解放
-        // cudaFree(d_row_ptr);
-        // cudaFree(d_col_idx);
-        // cudaFree(d_values);
-        // cudaFree(d_b);
-        // cudaFree(d_x);
-        // cudssDestroyMatrixDescr(descrA);
-        // cudssDestroy(handle);
     }
     catch(const std::exception& e){
         std::cerr << "Error: " << e.what() << std::endl;
