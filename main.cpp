@@ -29,8 +29,8 @@ int main(){
 	    _values[ii] = make_cuDoubleComplex(_values_tmp[ii].real(), _values_tmp[ii].imag());
         }
 	MathUtils::CSR<cuDoubleComplex> org_mat{_row_ptr, _col_idx, _values};
-	const MathUtils::CSR<cuDoubleComplex> full_mat{_row_ptr, _col_idx, _values};
-	// const auto full_mat = MathUtils::transformFullMatrix(org_mat);
+	// const MathUtils::CSR<cuDoubleComplex> full_mat{_row_ptr, _col_idx, _values};
+	const auto full_mat = MathUtils::transformFullMatrix(org_mat);
         std::vector<int> row_ptr = full_mat.row_ptr;
         std::vector<int> col_idx = full_mat.col_idx;
 	std::vector<cuDoubleComplex> values = full_mat.values;
@@ -90,8 +90,8 @@ int main(){
 	int64_t nrows = n, ncols = n;
 	int ldb = ncols, ldx = nrows;
 
-	cudssMatrixCreateDn(&b, ncols, nrhs, ldb, b_values_d, CUDA_C_32F, CUDSS_LAYOUT_COL_MAJOR);
-	cudssMatrixCreateDn(&x, nrows, nrhs, ldx, x_values_d, CUDA_C_32F, CUDSS_LAYOUT_COL_MAJOR);
+	cudssMatrixCreateDn(&b, ncols, nrhs, ldb, b_values_d, CUDA_C_64F, CUDSS_LAYOUT_COL_MAJOR);
+	cudssMatrixCreateDn(&x, nrows, nrhs, ldx, x_values_d, CUDA_C_64F, CUDSS_LAYOUT_COL_MAJOR);
 
 	// Create a matrix object for the sparse input matrix A.
 	cudssMatrix_t A;
@@ -101,7 +101,7 @@ int main(){
 	cudssMatrixViewType_t mview = CUDSS_MVIEW_FULL;
 	cudssIndexBase_t base = CUDSS_BASE_ZERO;
 
-	cudssMatrixCreateCsr(&A, nrows, ncols, nnz, row_ptr_d, nullptr, col_idx_d, values_d, CUDA_R_32I, CUDA_C_32F, mtype, mview, base);
+	cudssMatrixCreateCsr(&A, nrows, ncols, nnz, row_ptr_d, nullptr, col_idx_d, values_d, CUDA_R_32I, CUDA_C_64F, mtype, mview, base);
 
 	cudaEvent_t start_analysis, stop_analysis;
 	cudaEvent_t start_factor, stop_factor;
@@ -159,7 +159,6 @@ int main(){
 	cudaMemcpy(x_values.data(), x_values_d, nrhs * n * sizeof(cuDoubleComplex), cudaMemcpyDeviceToHost);
 	std::ofstream out(file_path + "x.dat");
         for (int i = 0; i < n; i++) {
-            // printf("x[%d] = (%1.4f, %1.4f)\n", i, x_values[i].x, x_values[i].y);
 	    out << "x[" << i << "] = (" << x_values[i].x << ", " << x_values[i].y << ")" << std::endl;
 	}
 	out.close();
