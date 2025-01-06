@@ -174,6 +174,13 @@ int main(){
 	    out << "b[" << i << "] = (" << b_confirm[i].x << ", " << b_confirm[i].y << ")" << std::endl;
 	}
 	out.close();
+
+	/// メモリ解放
+	cudaFree(row_ptr_d);
+	cudaFree(col_idx_d);
+	cudaFree(values_d);
+	cudaFree(b_values_d);
+	cudaFree(x_values_d);
     }
     catch(const std::exception& e){
         std::cerr << "Error: " << e.what() << std::endl;
