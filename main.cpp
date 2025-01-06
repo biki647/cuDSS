@@ -80,22 +80,22 @@ int main(){
         // CSR形式のデータをファイルから読み込む
 	// std::string file_path = "./matrix_data/1015/";
 	// std::string file_path = "./matrix_data/14557/";
-	// std::string file_path = "./matrix_data/99403/";
-	std::string file_path = "./matrix_data/2/";
+	std::string file_path = "./matrix_data/99403/";
+	// std::string file_path = "./matrix_data/2/";
 	// std::string file_path = "./";
         std::vector<int> _row_ptr = loadData<int>(file_path + "row_ptr.dat");
         std::vector<int> _col_idx = loadData<int>(file_path + "col_idx.dat");
         std::vector<std::complex<double>> _values_tmp = loadData<std::complex<double>>(file_path + "values.dat");
-	std::vector<cuComplex> _values(_values_tmp.size());
+	std::vector<cuDoubleComplex> _values(_values_tmp.size());
 	for(size_t ii=0; ii<_values.size(); ++ii){
-	    _values[ii] = make_cuComplex(_values_tmp[ii].real(), _values_tmp[ii].imag());
+	    _values[ii] = make_cuDoubleComplex(_values_tmp[ii].real(), _values_tmp[ii].imag());
         }
-	MathUtils::CSR<cuComplex> org_mat{_row_ptr, _col_idx, _values};
-	const MathUtils::CSR<cuComplex> full_mat{_row_ptr, _col_idx, _values};
+	MathUtils::CSR<cuDoubleComplex> org_mat{_row_ptr, _col_idx, _values};
+	const MathUtils::CSR<cuDoubleComplex> full_mat{_row_ptr, _col_idx, _values};
 	// const auto full_mat = MathUtils::transformFullMatrix(org_mat);
         std::vector<int> row_ptr = full_mat.row_ptr;
         std::vector<int> col_idx = full_mat.col_idx;
-	std::vector<cuComplex> values = full_mat.values;
+	std::vector<cuDoubleComplex> values = full_mat.values;
 
         // 行列のサイズと非ゼロ要素数の推定
         int n = row_ptr.size() - 1;
@@ -106,8 +106,8 @@ int main(){
 	std::cout << "nnz: " << nnz << std::endl;
 
         // 右辺ベクトルbの初期化（例として1+0iのベクトルを使用）
-        std::vector<cuComplex> b_values(n, cuComplex{1.0, 0.0});
-	std::vector<cuComplex> x_values(n);
+        std::vector<cuDoubleComplex> b_values(n, cuDoubleComplex{1.0, 0.0});
+	std::vector<cuDoubleComplex> x_values(n);
 	//  for(auto&& e: b_values){
 	//      std::cout << e.x << ", " << e.y << std::endl;
 	//  }
@@ -115,20 +115,20 @@ int main(){
 	// device側でのcsrデータの作成
 	int *row_ptr_d = nullptr;
 	int *col_idx_d = nullptr;
-	cuComplex *values_d = nullptr;
-	cuComplex *b_values_d = nullptr;
-	cuComplex *x_values_d = nullptr;
+	cuDoubleComplex *values_d = nullptr;
+	cuDoubleComplex *b_values_d = nullptr;
+	cuDoubleComplex *x_values_d = nullptr;
 
 	CUDA_CALL_AND_CHECK(cudaMalloc(&row_ptr_d, (n+1)*sizeof(int)), "cudaMalloc success");
 	CUDA_CALL_AND_CHECK(cudaMalloc(&col_idx_d, nnz * sizeof(int)), "cudaMalloc success");
-	CUDA_CALL_AND_CHECK(cudaMalloc(&values_d,  nnz * sizeof(cuComplex)), "cudaMalloc success");
-	CUDA_CALL_AND_CHECK(cudaMalloc(&b_values_d,       n * sizeof(cuComplex)), "cudaMalloc success");
-	CUDA_CALL_AND_CHECK(cudaMalloc(&x_values_d,       n * sizeof(cuComplex)), "cudaMalloc success");
+	CUDA_CALL_AND_CHECK(cudaMalloc(&values_d,  nnz * sizeof(cuDoubleComplex)), "cudaMalloc success");
+	CUDA_CALL_AND_CHECK(cudaMalloc(&b_values_d,       n * sizeof(cuDoubleComplex)), "cudaMalloc success");
+	CUDA_CALL_AND_CHECK(cudaMalloc(&x_values_d,       n * sizeof(cuDoubleComplex)), "cudaMalloc success");
 
 	cudaMemcpy(row_ptr_d, row_ptr.data(), (n+1) * sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(col_idx_d, col_idx.data(), nnz   * sizeof(int), cudaMemcpyHostToDevice);
-	cudaMemcpy(values_d, values.data(),   nnz   * sizeof(cuComplex), cudaMemcpyHostToDevice);
-	cudaMemcpy(b_values_d, b_values.data(), n * sizeof(cuComplex), cudaMemcpyHostToDevice);
+	cudaMemcpy(values_d, values.data(),   nnz   * sizeof(cuDoubleComplex), cudaMemcpyHostToDevice);
+	cudaMemcpy(b_values_d, b_values.data(), n * sizeof(cuDoubleComplex), cudaMemcpyHostToDevice);
 
 	// Create a CUDA stream
 	cudaStream_t stream = nullptr;
@@ -218,19 +218,19 @@ int main(){
 	cudaStreamSynchronize(stream);
 
         // // 結果をホストにコピー
-	cudaMemcpy(x_values.data(), x_values_d, nrhs * n * sizeof(cuComplex), cudaMemcpyDeviceToHost);
+	cudaMemcpy(x_values.data(), x_values_d, nrhs * n * sizeof(cuDoubleComplex), cudaMemcpyDeviceToHost);
 	std::ofstream out(file_path + "x.dat");
         for (int i = 0; i < n; i++) {
             // printf("x[%d] = (%1.4f, %1.4f)\n", i, x_values[i].x, x_values[i].y);
 	    out << "x[" << i << "] = (" << x_values[i].x << ", " << x_values[i].y << ")" << std::endl;
 	}
 	out.close();
-	std::vector<cuComplex> b_confirm(n, cuComplex{0., 0.});
+	std::vector<cuDoubleComplex> b_confirm(n, cuDoubleComplex{0., 0.});
 	for(size_t ii=0; ii<n; ++ii){
 	    for(size_t jj=row_ptr[ii]; jj<row_ptr[ii+1]; ++jj){
 	        const auto& col = col_idx[jj];
 		const auto& value = values[jj];
-		const auto& mul_ans = cuCmulf(value, x_values[col]);
+		const auto& mul_ans = cuCmul(value, x_values[col]);
 		b_confirm[ii].x += mul_ans.x;
 		b_confirm[ii].y += mul_ans.y;
 	    }
