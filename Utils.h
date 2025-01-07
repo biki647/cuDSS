@@ -52,4 +52,15 @@ void printVector<std::complex<double>>(const std::vector<std::complex<double>>& 
     }
 }
 
+void logGPUMemoryUsage(const std::string& stage) {
+	size_t free_mem, total_mem;
+	cudaMemGetInfo(&free_mem, &total_mem);
+	std::cout << "[" << stage << "] GPU Memory Usage: "
+		// << "Free = " << free_mem / (1024.0 * 1024.0) << " MB, "
+		// << "Total = " << total_mem / (1024.0 * 1024.0) << " MB, "
+		<< "Used = " << (total_mem - free_mem) / (1024.0 * 1024.0) << " MB" 
+		<< std::endl;
+}
+
+
 } // namespace Utils
