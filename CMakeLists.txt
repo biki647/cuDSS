@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.19)
 set(EXAMPLE_NAME get_set)
 
 # ------------------------ CUDA ------------------------
-set(CUDA_ROOT /opt/ohpc/pub/apps/cuda-12.2)
+set(CUDA_ROOT /usr/local/cuda-12)
 set(CUDA_INC ${CUDA_ROOT}/include)
 set(CUDA_LIB ${CUDA_ROOT}/lib64)
 set(CUDA_LIBRARIES # "libcuda.so" # -> Linuxだと不要
@@ -22,7 +22,8 @@ set(CMAKE_CUDA_EXTENSIONS        OFF)
 # Find cuDSS
 # find_package(cudss 0.4.0 REQUIRED)
 
-set(cudss_ROOT /home1/goto/LIB/cuDSS/0.4.0)
+# [FIXME]
+set(cudss_ROOT /home/goto/LIB/cuDSS/0.4.0)
 set(cudss_INCLUDE_DIR ${cudss_ROOT}/include)
 set(cudss_LIBRARY_DIR ${cudss_ROOT}/lib)
 

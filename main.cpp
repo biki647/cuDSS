@@ -12,7 +12,7 @@
 
 using namespace Utils;
 
-#define IS_FULL_MATRIX 1
+#define IS_FULL_MATRIX 0
 
 int main(){
 	try{
@@ -22,12 +22,15 @@ int main(){
 		// std::string file_path = "./matrix_data/1015/";
 		// std::string file_path = "./matrix_data/14557/";
 		// std::string file_path = "/home/goto/data/SparseMatrix/99403/";
+		// std::string file_path = "/home/goto/data/SparseMatrix/607232/";
+		std::string file_path = "/home/goto/data/SparseMatrix/1M/";
 		// std::string file_path = "/home/goto/data/SparseMatrix/14557/";
 		// std::string file_path = "/home/goto/data/SparseMatrix/1015/";
 		// std::string file_path = "/home/goto/data/matrix_data/1M/";
 		// std::string file_path = "/home/goto/data/matrix_data/2.5M/";
 		// std::string file_path = "/home/goto/data/matrix_data/1000/";
-		std::string file_path = "/home/goto/data/matrix_data/1M_2/";
+		// std::string file_path = "/home/goto/data/matrix_data/1M_2/";
+		// std::string file_path = "/home/goto/data/matrix_data/173294/";
 		// std::string file_path = "/home/goto/data/SparseMatrix/others/82158/";
 		// std::string file_path = "./matrix_data/2/";
 		// std::string file_path = "./";
