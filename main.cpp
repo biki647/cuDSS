@@ -12,13 +12,19 @@
 
 using namespace Utils;
 
+#define IS_FULL_MATRIX 0
+
 int main(){
     try{
         cudaError_t cuda_error = cudaSuccess;
         // CSR形式のデータをファイルから読み込む
 	// std::string file_path = "./matrix_data/1015/";
 	// std::string file_path = "./matrix_data/14557/";
-	std::string file_path = "./matrix_data/99403/";
+	// std::string file_path = "./matrix_data/99403/";
+	// std::string file_path = "./matrix_data/1M/";
+	// std::string file_path = "./matrix_data/2.5M/";
+	std::string file_path = "./matrix_data/10M/";
+	// std::string file_path = "./matrix_data/100000/";
 	// std::string file_path = "./matrix_data/2/";
 	// std::string file_path = "./";
         std::vector<int> _row_ptr = loadData<int>(file_path + "row_ptr.dat");
@@ -29,8 +35,13 @@ int main(){
 	    _values[ii] = make_cuDoubleComplex(_values_tmp[ii].real(), _values_tmp[ii].imag());
         }
 	MathUtils::CSR<cuDoubleComplex> org_mat{_row_ptr, _col_idx, _values};
-	// const MathUtils::CSR<cuDoubleComplex> full_mat{_row_ptr, _col_idx, _values};
+#if IS_FULL_MATRIX == 1
+	std::cout << "FULL" << std::endl;
+	const MathUtils::CSR<cuDoubleComplex> full_mat{_row_ptr, _col_idx, _values};
+#elif IS_FULL_MATRIX == 0
+	std::cout << "UPPER" << std::endl;
 	const auto full_mat = MathUtils::transformFullMatrix(org_mat);
+#endif
         std::vector<int> row_ptr = full_mat.row_ptr;
         std::vector<int> col_idx = full_mat.col_idx;
 	std::vector<cuDoubleComplex> values = full_mat.values;
@@ -152,7 +163,7 @@ int main(){
 
 	cudaStreamSynchronize(stream);
 
-        // // 結果をホストにコピー
+        // 結果をホストにコピー
 	cudaMemcpy(x_values.data(), x_values_d, nrhs * n * sizeof(cuDoubleComplex), cudaMemcpyDeviceToHost);
 	std::ofstream out(file_path + "x.dat");
         for (int i = 0; i < n; i++) {

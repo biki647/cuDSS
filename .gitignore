@@ -1,3 +1,5 @@
 build/*
 *.dat
 matrix_data/*
+a.out
+
