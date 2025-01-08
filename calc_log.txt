@@ -1,0 +1,74 @@
+## HYBRID MEMORY MODE LIMITを1.6E9で設定した場合
+```
+[Init] GPU Memory Usage: Used = 509.438 MB
+UPPER
+row_ptr size: 1226916
+n: 1226915
+nnz: 19665671
+[Before CUDA malloc] GPU Memory Usage: Used = 509.438 MB
+[After CUDA malloc] GPU Memory Usage: Used = 933.438 MB
+[Before reorder] GPU Memory Usage: Used = 1329.44 MB
+Symbolic factorization completed. Time = 14370.3 [ms]
+[After reorder] GPU Memory Usage: Used = 1991.44 MB
+hybrid memory mode: 15246205364 bytes
+hybrid memory mode limit: 16000000000 bytes
+[Before factorization] GPU Memory Usage: Used = 1991.44 MB
+Factorization completed. Time = 89208.9 [ms]
+[After factorization] GPU Memory Usage: Used = 20937.4 MB
+[Before solve] GPU Memory Usage: Used = 20937.4 MB
+Solving completed. Time = 2341.18 [ms]
+[After solve] GPU Memory Usage: Used = 20937.4 MB
+DSS completed. Total time = 105921 [ms]
+[After destroying matrix data] GPU Memory Usage: Used = 1319.44 MB
+[After cudaFree data] GPU Memory Usage: Used = 895.438 MB
+Success
+```
+
+## HYBRID MEMORY MODE LIMITを指定しない場合
+```
+[Init] GPU Memory Usage: Used = 509.438 MB
+UPPER
+row_ptr size: 1226916
+n: 1226915
+nnz: 19665671
+[Before CUDA malloc] GPU Memory Usage: Used = 509.438 MB
+[After CUDA malloc] GPU Memory Usage: Used = 933.438 MB
+[Before reorder] GPU Memory Usage: Used = 1329.44 MB
+Symbolic factorization completed. Time = 14475.9 [ms]
+[After reorder] GPU Memory Usage: Used = 1991.44 MB
+hybrid memory mode: 15246205364 bytes
+[Before factorization] GPU Memory Usage: Used = 1991.44 MB
+Factorization completed. Time = 3465.23 [ms]
+[After factorization] GPU Memory Usage: Used = 27193.4 MB
+[Before solve] GPU Memory Usage: Used = 27193.4 MB
+Solving completed. Time = 65.1663 [ms]
+[After solve] GPU Memory Usage: Used = 27193.4 MB
+DSS completed. Total time = 18085.9 [ms]
+[After destroying matrix data] GPU Memory Usage: Used = 1319.44 MB
+[After cudaFree data] GPU Memory Usage: Used = 895.438 MB
+Success
+```
+
+## HYBRID MEMORY MODEをOFFにした場合
+```
+[Init] GPU Memory Usage: Used = 509.438 MB
+UPPER
+row_ptr size: 1226916
+n: 1226915
+nnz: 19665671
+[Before CUDA malloc] GPU Memory Usage: Used = 509.438 MB
+[After CUDA malloc] GPU Memory Usage: Used = 933.438 MB
+[Before reorder] GPU Memory Usage: Used = 1329.44 MB
+Symbolic factorization completed. Time = 14129.8 [ms]
+[After reorder] GPU Memory Usage: Used = 1991.44 MB
+[Before factorization] GPU Memory Usage: Used = 1991.44 MB
+Factorization completed. Time = 3468.33 [ms]
+[After factorization] GPU Memory Usage: Used = 27193.4 MB
+[Before solve] GPU Memory Usage: Used = 27193.4 MB
+Solving completed. Time = 65.1551 [ms]
+[After solve] GPU Memory Usage: Used = 27193.4 MB
+DSS completed. Total time = 17663.6 [ms]
+[After destroying matrix data] GPU Memory Usage: Used = 1319.44 MB
+[After cudaFree data] GPU Memory Usage: Used = 895.438 MB
+Success
+```

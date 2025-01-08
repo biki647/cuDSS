@@ -12,12 +12,23 @@
 
 using namespace Utils;
 
+#define CUDSS_CALL_AND_CHECK(call, status, msg) \
+    do { \
+        status = call; \
+        if (status != CUDSS_STATUS_SUCCESS) { \
+            printf("Example FAILED: CUDSS call ended unsuccessfully with status = %d, details: " #msg "\n", status); \
+            return -2; \
+        } \
+    } while(0);
+
 #define IS_FULL_MATRIX 0
+#define HYBRID_MEMORY_MODE 0
 
 int main(){
 	try{
 		logGPUMemoryUsage("Init");
 		cudaError_t cuda_error = cudaSuccess;
+		cudssStatus_t status = CUDSS_STATUS_SUCCESS;
 		// CSR形式のデータをファイルから読み込む
 		// std::string file_path = "./matrix_data/1015/";
 		// std::string file_path = "./matrix_data/14557/";
@@ -122,6 +133,13 @@ int main(){
 
 		cudssMatrixCreateCsr(&A, nrows, ncols, nnz, row_ptr_d, nullptr, col_idx_d, values_d, CUDA_R_32I, CUDA_C_64F, mtype, mview, base);
 
+#if HYBRID_MEMORY_MODE
+		// Hybrid memory modeをオンにする
+		int hybrid_mode = 1;
+		cudssConfigSet(solverConfig, CUDSS_CONFIG_HYBRID_MODE, &hybrid_mode, sizeof(hybrid_mode));
+#endif
+
+		// 時間計測をするためにイベントを作成
 		cudaEvent_t start_analysis, stop_analysis;
 		cudaEvent_t start_factor, stop_factor;
 		cudaEvent_t start_solve, stop_solve;
@@ -141,27 +159,42 @@ int main(){
 		// Symbolic factorization
 		logGPUMemoryUsage("Before reorder");
 		cudaEventRecord(start_analysis, stream);
-		cudssExecute(handle, CUDSS_PHASE_ANALYSIS, solverConfig, solverData, A, x, b);
+		CUDSS_CALL_AND_CHECK(cudssExecute(handle, CUDSS_PHASE_ANALYSIS, solverConfig, solverData, A, x, b), status, "cudssExecute");
 		cudaEventRecord(stop_analysis, stream);
 		cudaEventSynchronize(stop_analysis);
 		cudaEventElapsedTime(&analysis_time_ms, start_analysis, stop_analysis);
 		std::cout << "Symbolic factorization completed. Time = " << analysis_time_ms << " [ms]" << std::endl;
 		logGPUMemoryUsage("After reorder");
 
+
+#if HYBRID_MEMORY_MODE
+		size_t size_written;
+		int64_t device_memory_min;
+		cudssDataGet(handle, solverData, CUDSS_DATA_HYBRID_DEVICE_MEMORY_MIN, &device_memory_min, sizeof(device_memory_min), &size_written); 
+		std::cout << "hybrid memory mode: " << device_memory_min << " bytes" << std::endl;
+		// int64_t hybrid_device_memory_limit = 1.6*10e9;
+		// cudssConfigSet(solverConfig, CUDSS_CONFIG_HYBRID_DEVICE_MEMORY_LIMIT, &hybrid_device_memory_limit, sizeof(hybrid_device_memory_limit));
+		// std::cout << "hybrid memory mode limit: " << hybrid_device_memory_limit << " bytes" << std::endl;
+#endif
+
 		// Factorization
 		logGPUMemoryUsage("Before factorization");
 		cudaEventRecord(start_factor, stream);
-		cudssExecute(handle, CUDSS_PHASE_FACTORIZATION, solverConfig, solverData, A, x, b);
+		CUDSS_CALL_AND_CHECK(cudssExecute(handle, CUDSS_PHASE_FACTORIZATION, solverConfig, solverData, A, x, b), status, "cudssExecute");
 		cudaEventRecord(stop_factor, stream);
 		cudaEventSynchronize(stop_factor);
 		cudaEventElapsedTime(&factor_time_ms, start_factor, stop_factor);
 		std::cout << "Factorization completed. Time = " << factor_time_ms << " [ms]" << std::endl;
 		logGPUMemoryUsage("After factorization");
 
+		// int64_t lu_nnz_num;
+		// cudssDataGet(handle, solverData, CUDSS_DATA_LU_NNZ, &lu_nnz_num, sizeof(lu_nnz_num), &size_written); 
+		// std::cout << "lu nnz num: " << lu_nnz_num << " bytes" << std::endl;
+
 		// Solving
 		logGPUMemoryUsage("Before solve");
 		cudaEventRecord(start_solve, stream);
-		cudssExecute(handle, CUDSS_PHASE_SOLVE, solverConfig, solverData, A, x, b);
+		CUDSS_CALL_AND_CHECK(cudssExecute(handle, CUDSS_PHASE_SOLVE, solverConfig, solverData, A, x, b), status, "cudssExecute");
 		cudaEventRecord(stop_solve, stream);
 		cudaEventSynchronize(stop_solve);
 		cudaEventElapsedTime(&solve_time_ms, start_solve, stop_solve);
