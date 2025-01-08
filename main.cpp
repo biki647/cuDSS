@@ -12,15 +12,6 @@
 
 using namespace Utils;
 
-#define CUDSS_CALL_AND_CHECK(call, status, msg) \
-    do { \
-        status = call; \
-        if (status != CUDSS_STATUS_SUCCESS) { \
-            printf("Example FAILED: CUDSS call ended unsuccessfully with status = %d, details: " #msg "\n", status); \
-            return -2; \
-        } \
-    } while(0);
-
 #define IS_FULL_MATRIX 0
 #define HYBRID_MEMORY_MODE 0
 
