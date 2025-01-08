@@ -98,3 +98,4 @@ DSS completed. Total time = 17388.1 [ms]
 [After cudaFreeManaged data] GPU Memory Usage: Used = 859.438 MB
 Success
 ```
+-> この結果から言えるのはUNIFIED MEMORYを使ったところで、結局CUDSSはデバイスメモリ上にメモリを確保するため、無効。結局27GBのメモリを食うため、テストサーバーのようにデバイスメモリが16GBしかないマシンでUNIFIED MEMORYを使ったところで計算が落ちる。
