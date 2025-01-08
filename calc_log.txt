@@ -1,3 +1,4 @@
+# seed gpu（A100）で実行
 ## HYBRID MEMORY MODE LIMITを1.6E9で設定した場合
 ```
 [Init] GPU Memory Usage: Used = 509.438 MB
@@ -70,5 +71,30 @@ Solving completed. Time = 65.1551 [ms]
 DSS completed. Total time = 17663.6 [ms]
 [After destroying matrix data] GPU Memory Usage: Used = 1319.44 MB
 [After cudaFree data] GPU Memory Usage: Used = 895.438 MB
+Success
+```
+
+## UNIFIED MEMORYを使用した場合
+```
+[Init] GPU Memory Usage: Used = 509.438 MB
+UPPER
+row_ptr size: 1226916
+n: 1226915
+nnz: 19665671
+[Before cudaMallocManaged] GPU Memory Usage: Used = 509.438 MB
+[After cudaMallocManaged] GPU Memory Usage: Used = 509.438 MB
+[After copying to UM] GPU Memory Usage: Used = 509.438 MB
+[Before reorder] GPU Memory Usage: Used = 905.438 MB
+Symbolic factorization completed. Time = 13787.1 [ms]
+[After reorder] GPU Memory Usage: Used = 1567.44 MB
+[Before factorization] GPU Memory Usage: Used = 1567.44 MB
+Factorization completed. Time = 3523.78 [ms]
+[After factorization] GPU Memory Usage: Used = 27153.4 MB
+[Before solve] GPU Memory Usage: Used = 27153.4 MB
+Solving completed. Time = 77.0079 [ms]
+[After solve] GPU Memory Usage: Used = 27153.4 MB
+DSS completed. Total time = 17388.1 [ms]
+[After destroying matrix data] GPU Memory Usage: Used = 1279.44 MB
+[After cudaFreeManaged data] GPU Memory Usage: Used = 859.438 MB
 Success
 ```
