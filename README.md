@@ -16,6 +16,22 @@
 - C++コンパイラ：C++17以降に対応（例：GCC、Clang、MSVCなど）
 - CMake：version 3.19以降
 
+# cuDSSのインストール方法
+## Linux
+- 適当なディレクトリにtar.xzファイルをダウンロード
+```bash
+wget https://developer.download.nvidia.com/compute/cudss/redist/libcudss/linux-x86_64/libcudss-linux-x86_64-0.4.0.2_cuda12-archive.tar.xz
+xz -dv libcudss-linux-x86_64-0.4.0.2_cuda12-archive.tar.xz
+tar xfv libcudss-linux-x86_64-0.4.0.2_cuda12-archive.tar
+```
+- 解凍したディレクトリを好きなパスに置く
+
+## Windows
+- ダウンロードするパスが違うだけ、他はLinuxと同じ
+```bash
+wget https://developer.download.nvidia.com/compute/cudss/redist/libcudss/windows-x86_64/libcudss-windows-x86_64-0.4.0.2_cuda12-archive.zip
+```
+
 # ビルド方法
 - build
 ```bash
