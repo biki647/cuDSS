@@ -1,0 +1,83 @@
+cudss
+
+[Init] GPU Memory Usage: Used = 315.688 MB
+UPPER
+row_ptr size: 1016
+n: 1015
+nnz: 13789
+[Before CUDA malloc] GPU Memory Usage: Used = 315.688 MB
+[After CUDA malloc] GPU Memory Usage: Used = 317.688 MB
+[Before reorder] GPU Memory Usage: Used = 327.688 MB
+Symbolic factorization completed. Time = 25.0481 [ms]
+[After reorder] GPU Memory Usage: Used = 327.688 MB
+[Before factorization] GPU Memory Usage: Used = 327.688 MB
+Factorization completed. Time = 14.1507 [ms]
+[After factorization] GPU Memory Usage: Used = 331.688 MB
+[Before solve] GPU Memory Usage: Used = 331.688 MB
+Solving completed. Time = 8.92621 [ms]
+[After solve] GPU Memory Usage: Used = 331.688 MB
+DSS completed. Total time = 48.2099 [ms]
+[After destroying matrix data] GPU Memory Usage: Used = 319.688 MB
+[After cudaFree data] GPU Memory Usage: Used = 317.688 MB
+Success
+
+
+[Init] GPU Memory Usage: Used = 315.688 MB
+UPPER
+row_ptr size: 14558
+n: 14557
+nnz: 219901
+[Before CUDA malloc] GPU Memory Usage: Used = 315.688 MB
+[After CUDA malloc] GPU Memory Usage: Used = 321.688 MB
+[Before reorder] GPU Memory Usage: Used = 331.688 MB
+Symbolic factorization completed. Time = 140.175 [ms]
+[After reorder] GPU Memory Usage: Used = 339.688 MB
+[Before factorization] GPU Memory Usage: Used = 339.688 MB
+Factorization completed. Time = 28.585 [ms]
+[After factorization] GPU Memory Usage: Used = 405.688 MB
+[Before solve] GPU Memory Usage: Used = 405.688 MB
+Solving completed. Time = 5.23878 [ms]
+[After solve] GPU Memory Usage: Used = 405.688 MB
+DSS completed. Total time = 174.106 [ms]
+[After destroying matrix data] GPU Memory Usage: Used = 323.688 MB
+[After cudaFree data] GPU Memory Usage: Used = 317.688 MB
+Success
+
+
+[Init] GPU Memory Usage: Used = 315.688 MB
+UPPER
+row_ptr size: 99404
+n: 99403
+nnz: 1557403
+[Before CUDA malloc] GPU Memory Usage: Used = 315.688 MB
+[After CUDA malloc] GPU Memory Usage: Used = 349.688 MB
+[Before reorder] GPU Memory Usage: Used = 359.688 MB
+Symbolic factorization completed. Time = 817.388 [ms]
+[After reorder] GPU Memory Usage: Used = 407.688 MB
+[Before factorization] GPU Memory Usage: Used = 407.688 MB
+Factorization completed. Time = 279.122 [ms]
+[After factorization] GPU Memory Usage: Used = 1253.69 MB
+[Before solve] GPU Memory Usage: Used = 1253.69 MB
+Solving completed. Time = 11.691 [ms]
+[After solve] GPU Memory Usage: Used = 1253.69 MB
+DSS completed. Total time = 1108.3 [ms]
+[After destroying matrix data] GPU Memory Usage: Used = 351.688 MB
+[After cudaFree data] GPU Memory Usage: Used = 317.688 MB
+Success
+
+
+[Init] GPU Memory Usage: Used = 315.688 MB
+UPPER
+row_ptr size: 1226916
+n: 1226915
+nnz: 19665671
+[Before CUDA malloc] GPU Memory Usage: Used = 315.688 MB
+[After CUDA malloc] GPU Memory Usage: Used = 739.688 MB
+[Before reorder] GPU Memory Usage: Used = 751.688 MB
+Symbolic factorization completed. Time = 13217.9 [ms]
+[After reorder] GPU Memory Usage: Used = 1417.69 MB
+[Before factorization] GPU Memory Usage: Used = 1417.69 MB
+Example FAILED: CUDSS call ended unsuccessfully with status = 2, details: "cudssExecute"
+
+
+
